@@ -201,7 +201,6 @@ def get_items(
 
 @app.post("/api/claim")
 def claim_item(data: ClaimRequest):
-    item_id:data.item_id
     user_id = data.user_id
 
     conn = get_db()
