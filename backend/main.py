@@ -286,3 +286,8 @@ def active_claims():
     finally:
         cur.close()
         conn.close()
+
+@app.get("/cors-test")
+def cors_test():
+    return {"message": "cors working"}
+
