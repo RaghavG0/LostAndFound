@@ -6,6 +6,7 @@ if (!BASE_URL) {
 export interface Item {
   item_id: number;
   item_name: string;
+  description: string | null;
   location_found: string;
   date_found: string;
   image_url: string;

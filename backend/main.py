@@ -142,8 +142,14 @@ def get_items(
 ):
 
     query = """
-        SELECT I.item_id, I.item_name, I.location_found, I.date_found,
-               I.image_url, C.category_name
+        SELECT 
+            I.item_id,
+            I.item_name,
+            I.description,
+            I.location_found,
+            I.date_found,
+            I.image_url,
+            C.category_name
         FROM ITEM I
         JOIN CATEGORY C ON I.category_id = C.category_id
         WHERE I.status='FOUND'
@@ -178,10 +184,11 @@ def get_items(
             {
                 "item_id": r[0],
                 "item_name": r[1],
-                "location_found": r[2],
-                "date_found": r[3],
-                "image_url": r[4],
-                "category_name": r[5],
+                "description": r[2],
+                "location_found": r[3],
+                "date_found": r[4],
+                "image_url": r[5],
+                "category_name": r[6],
             }
             for r in rows
         ]
@@ -189,11 +196,6 @@ def get_items(
     finally:
         cur.close()
         conn.close()
-
-
-# ==========================
-# ---------- CLAIM ITEM ----------
-# ==========================
 
 @app.post("/api/claim")
 def claim_item(data: ClaimRequest):

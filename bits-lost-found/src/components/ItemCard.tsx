@@ -8,9 +8,7 @@ interface ItemCardProps {
 }
 
 const ItemCard = ({ item, onClaim, claiming }: ItemCardProps) => {
-  const categoryName =
-    item.category || CATEGORIES.find((c) => c.id === item.category_id)?.name || "Unknown";
-
+  const categoryName = item.category_name || "Unknown";
   return (
     <div className="group glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
       <div className="aspect-[4/3] bg-muted overflow-hidden relative">
@@ -41,7 +39,7 @@ const ItemCard = ({ item, onClaim, claiming }: ItemCardProps) => {
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-5">
           <span className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-primary/70" />
-            {item.location}
+            {item.location_found}
           </span>
           <span className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-primary/70" />
