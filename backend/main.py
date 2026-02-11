@@ -12,21 +12,19 @@ from auth import verify_google_token
 
 app = FastAPI()
 
-# ✅ FIXED CORS (no wildcard in dev)
+origins = [
+    "http://localhost:3000",
+    "https://lost-and-found-bits.vercel.app",
+    "https://lost-and-found-bits.vercel.app/",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://lost-and-found-bits.vercel.app/",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://lost-and-found-bits.vercel.app/",
-        "https://lost-and-found-bits.vercel.app",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 
 # ==========================
