@@ -16,7 +16,11 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://lost-and-found-bits.vercel.app/"
+        "https://lost-and-found-bits.vercel.app/",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://lost-and-found-bits.vercel.app/",
+        "https://lost-and-found-bits.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
