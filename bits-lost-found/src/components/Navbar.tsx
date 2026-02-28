@@ -9,6 +9,7 @@ import {
   ClipboardList,
   LogOut,
   Sparkles,
+  UserCheck,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -32,6 +33,7 @@ const Navbar = () => {
     <nav className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Logo */}
           <Link
             href="/items"
             className="flex items-center gap-2.5 font-bold font-display text-lg"
@@ -39,32 +41,45 @@ const Navbar = () => {
             <div className="w-8 h-8 rounded-lg gradient-warm flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="hidden sm:inline text-gradient">BITS L&F</span>
+            <span className="hidden sm:inline text-gradient">
+              BITS L&F
+            </span>
           </Link>
 
           {user && (
             <div className="flex items-center gap-1">
+              {/* Items */}
               <Link href="/items" className={linkClass("/items")}>
                 <Package className="w-4 h-4" />
                 <span className="hidden sm:inline">Items</span>
               </Link>
 
+              {/* Report */}
               <Link href="/add-item" className={linkClass("/add-item")}>
                 <PlusCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Report</span>
               </Link>
 
+              {/* My Claims */}
+              <Link href="/my-claims" className={linkClass("/my-claims")}>
+                <UserCheck className="w-4 h-4" />
+                <span className="hidden sm:inline">My Claims</span>
+              </Link>
+
+              {/* All Claims */}
               <Link href="/claims" className={linkClass("/claims")}>
                 <ClipboardList className="w-4 h-4" />
-                <span className="hidden sm:inline">Claims</span>
+                <span className="hidden sm:inline">All Claims</span>
               </Link>
 
               <div className="w-px h-6 bg-border mx-2 hidden sm:block" />
 
+              {/* Username */}
               <span className="text-xs text-muted-foreground hidden md:block max-w-[140px] truncate">
                 {user.email.split("@")[0]}
               </span>
 
+              {/* Logout */}
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 ml-1"

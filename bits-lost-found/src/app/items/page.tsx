@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getItems, claimItem, type Item, type FilterParams } from "@/lib/api";
-import { getStoredUser, isLoggedIn } from "@/lib/auth";
+import { getItems, type Item, type FilterParams } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
 import Navbar from "@/components/Navbar";
 import Filters from "@/components/Filters";
 import ItemCard from "@/components/ItemCard";
@@ -16,7 +16,6 @@ export default function ItemsPage() {
 
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
-  const [claimingId, setClaimingId] = useState<number | null>(null);
   const [filters, setFilters] = useState<FilterParams>({});
 
   // 🔒 Protect route
@@ -46,37 +45,12 @@ export default function ItemsPage() {
     fetchItems();
   }, [fetchItems]);
 
-  const handleClaim = async (itemId: number) => {
-    const user = getStoredUser();
-    if (!user) return;
-
-    setClaimingId(itemId);
-
-    try {
-      await claimItem(itemId, user.user_id);
-
-      toast({
-        title: "Claimed! 🎉",
-        description: "Item claimed successfully. Collect it soon!",
-      });
-
-      fetchItems();
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to claim item.",
-        variant: "destructive",
-      });
-    } finally {
-      setClaimingId(null);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       <div className="page-container">
+        {/* Header */}
         <div className="mb-8 animate-fade-in">
           <h1 className="text-3xl font-bold font-display text-foreground flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl gradient-warm flex items-center justify-center shadow-warm">
@@ -90,8 +64,10 @@ export default function ItemsPage() {
           </p>
         </div>
 
+        {/* Filters */}
         <Filters onFilterChange={setFilters} />
 
+        {/* Loading State */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -133,8 +109,7 @@ export default function ItemsPage() {
               >
                 <ItemCard
                   item={item}
-                  onClaim={handleClaim}
-                  claiming={claimingId === item.item_id}
+                  onRefresh={fetchItems}  // 🔥 clean refresh after claim
                 />
               </div>
             ))}

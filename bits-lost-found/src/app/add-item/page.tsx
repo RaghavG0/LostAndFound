@@ -11,15 +11,17 @@ import { PlusCircle, Send } from "lucide-react";
 export default function AddItemPage() {
   const router = useRouter();
   const { toast } = useToast();
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     item_name: "",
     description: "",
     category_id: "",
     location: "",
     date_found: "",
-    image_url: "",
+    phone_number: "",
+    room_number: "",
   });
 
   // 🔒 Protect route
@@ -40,7 +42,14 @@ export default function AddItemPage() {
     const user = getStoredUser();
     if (!user) return;
 
-    if (!form.item_name || !form.category_id || !form.location || !form.date_found) {
+    if (
+      !form.item_name ||
+      !form.category_id ||
+      !form.location ||
+      !form.date_found ||
+      !form.phone_number ||
+      !form.room_number
+    ) {
       toast({
         title: "Missing fields",
         description: "Please fill all required fields.",
@@ -52,15 +61,22 @@ export default function AddItemPage() {
     setSubmitting(true);
 
     try {
-      await addItem({
-        item_name: form.item_name,
-        description: form.description,
-        location: form.location,
-        date_found: form.date_found,
-        image_url: form.image_url,
-        category_id: Number(form.category_id),
-        user_id: user.user_id,
-      });
+      const formData = new FormData();
+
+      formData.append("item_name", form.item_name);
+      formData.append("description", form.description);
+      formData.append("location", form.location);
+      formData.append("date_found", form.date_found);
+      formData.append("category_id", form.category_id);
+      formData.append("user_id", String(user.user_id));
+      formData.append("phone_number", form.phone_number);
+      formData.append("room_number", form.room_number);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      await addItem(formData);
 
       toast({
         title: "Item reported! 📦",
@@ -101,6 +117,7 @@ export default function AddItemPage() {
           onSubmit={handleSubmit}
           className="glass-card rounded-2xl p-6 sm:p-8 space-y-5 animate-slide-up"
         >
+          {/* Item Name */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">
               Item Name <span className="text-primary">*</span>
@@ -114,6 +131,7 @@ export default function AddItemPage() {
             />
           </div>
 
+          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">
               Description
@@ -128,6 +146,7 @@ export default function AddItemPage() {
             />
           </div>
 
+          {/* Category + Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">
@@ -162,6 +181,7 @@ export default function AddItemPage() {
             </div>
           </div>
 
+          {/* Location */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">
               Location <span className="text-primary">*</span>
@@ -171,23 +191,57 @@ export default function AddItemPage() {
               value={form.location}
               onChange={handleChange}
               className="input-styled"
-              placeholder="e.g., Library, F Block, LTC"
+              placeholder="e.g., Library, F Block"
             />
           </div>
 
+          {/* Reporter Details */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Your Phone Number <span className="text-primary">*</span>
+              </label>
+              <input
+                name="phone_number"
+                value={form.phone_number}
+                onChange={handleChange}
+                className="input-styled"
+                placeholder="9876543210"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Pickup Room Number <span className="text-primary">*</span>
+              </label>
+              <input
+                name="room_number"
+                value={form.room_number}
+                onChange={handleChange}
+                className="input-styled"
+                placeholder="A-102"
+              />
+            </div>
+          </div>
+
+          {/* Image */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">
-              Image URL
+              Upload Image (JPG or PNG only)
             </label>
             <input
-              name="image_url"
-              value={form.image_url}
-              onChange={handleChange}
+              type="file"
+              accept="image/jpeg, image/png"
+              onChange={(e) => {
+                if (e.target.files) {
+                  setImageFile(e.target.files[0]);
+                }
+              }}
               className="input-styled"
-              placeholder="https://..."
             />
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={submitting}

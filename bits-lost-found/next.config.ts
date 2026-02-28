@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     "169.254.183.18",
     "https://169.254.183.18"
   ],
+  turbopack: {
+    root: __dirname,
+  },
 };
 
 
