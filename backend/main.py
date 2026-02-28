@@ -126,12 +126,6 @@ def add_item(
 
     try:
         cur.execute("""
-            UPDATE "USER"
-            SET phone_number=%s,
-                room_number=%s
-            WHERE user_id=%s
-            """, (phone_number, room_number, user_id))
-        cur.execute("""
             INSERT INTO ITEM
             (item_name, description, location_found, date_found,
              image_url, uploaded_by, current_holder, holder_phone, holder_room, category_id)
